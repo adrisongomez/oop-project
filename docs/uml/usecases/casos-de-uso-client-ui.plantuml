@@ -1,0 +1,95 @@
+@startuml "Caso de Uso de la App Web"
+left to right direction
+actor User as user
+actor Administrator as admin
+actor "Usuario Regular" as dev
+database UsersDB
+database MetricsDB
+database LogsDB
+database RequestsDB
+database TracesDB
+database AlarmsDB
+' database TrafficAnalyzer
+(App a monitorear) as userApp
+
+user <|-- admin
+user <|-- dev
+
+rectangle "Control Panel App" {
+    usecase "Invitar usuario regular" as makeInvite
+    usecase "Enviar notification" as sendNotification
+    usecase "Validar invitacion" as validateInvite
+    usecase "Guardar users details" as saveUserDetails
+    usecase "Validar informacion de contacto del usuario" as validarContactInformation
+    usecase "Solicitar dashboard" as showDasboard
+    usecase "Solicitar lista de logs" as getLogs
+    usecase "Solicitar lista de requests" as getRequests
+    usecase "Generar una traza por requests" as generateTraceByRequests
+    usecase "Cambiar el rol de un usuario" as changeUserRole
+    usecase "Solicitar alarmas" as getAlarms
+    usecase "Asignar alarma a usuario" as setAlarmOwner
+}
+
+rectangle "Writer App" {
+    usecase "Registrar nueva traza" as upsertTrace
+    usecase "Registrar nueva metrica" as emitMetric
+    usecase "Registrar nuevo log" as emitLog
+    usecase "Registrar nuevo request" as emitRequest
+    usecase "Triggerar alarma" as triggerAlarm 
+}
+
+rectangle "Reader App" {
+    usecase "Agregacion de metricas" as aggregateMetrics
+    usecase "Filtrar logs" as aggregateLogs
+    usecase "Generar lista de requests" as getRequestsList
+    usecase "Generar trazas" as buildTrace
+}
+
+admin--makeInvite
+makeInvite--sendNotification : include
+dev--validateInvite
+validateInvite--saveUserDetails
+saveUserDetails-->validarContactInformation : include
+validarContactInformation--sendNotification : include
+validarContactInformation--UsersDB
+sendNotification--dev
+
+user--getLogs
+getLogs -- aggregateLogs : include
+aggregateLogs -- LogsDB
+user--showDasboard
+
+user--getAlarms
+getAlarms--AlarmsDB
+
+user--setAlarmOwner
+setAlarmOwner--AlarmsDB
+setAlarmOwner--sendNotification : include
+sendNotification--user
+
+user--getRequests
+getRequests--getRequestsList
+getRequestsList--RequestsDB
+
+user--generateTraceByRequests
+generateTraceByRequests--buildTrace
+buildTrace--getRequestsList : include
+buildTrace--aggregateMetrics : include
+
+admin--changeUserRole
+changeUserRole--UsersDB
+
+userApp--upsertTrace
+upsertTrace--TracesDB
+
+userApp--emitMetric
+emitMetric--MetricsDB
+
+userApp--emitLog
+emitLog--triggerAlarm : extend
+emitLog--LogsDB
+
+userApp--emitRequest
+emitRequest--RequestsDB
+
+@enduml
