@@ -1,0 +1,352 @@
+@startuml "Diagrama de Clases"
+left to right direction
+
+package Auth {
+    interface IUserRepository {
+        User findById(UUID id)
+        User findByEmail(String email)
+        List<User> findAll()
+        User save(User user)
+        void delete(UUID id)
+        List<User> findByRole(Role role)
+    }
+
+    interface ISessionRepository {
+        Session findById(UUID id)
+        List<Session> findByUser(User user)
+        Session save(Session session)
+        void delete(UUID id)
+        void deleteAllByUser(User user)
+    }
+
+    interface IAuthenticationStrategy {
+        Boolean authenticate(String credential, String secret)
+        void validateCredentials(String credential, String secret)
+    }
+
+    class PasswordAuthentication implements IAuthenticationStrategy {
+        Hasher hasher
+        PasswordPolicy policy
+    }
+
+    class OtpAuthentication implements IAuthenticationStrategy {
+        OtpHandler otpHandler
+    }
+
+    enum UserStatus {
+        ACTIVE
+        INACTIVE
+        BLOCKED
+        PENDING_ACTIVATION
+    }
+
+    enum InvitationStatus {
+        PENDING
+        ACCEPTED
+        EXPIRED
+        CANCELLED
+    }
+
+    interface IPasswordPolicy {
+        Boolean validatePassword(String password)
+        Boolean isLocked(User user)
+        void enforcePolicy(String password)
+    }
+
+    class BasicPasswordPolicy implements IPasswordPolicy {
+        Int minLength
+        Boolean requireSpecialChars
+        Boolean requireNumbers
+        Boolean requireUppercase
+    }
+
+    class EnterprisePasswordPolicy implements IPasswordPolicy {
+        Int minLength
+        Boolean requireSpecialChars
+        Boolean requireNumbers
+        Boolean requireUppercase
+        Int maxAttempts
+        Int historySize
+        Int expirationDays
+    }
+
+    class PasswordPolicy {
+        Int minLength
+        Boolean requireSpecialChars
+        Boolean requireNumbers
+        Boolean requireUppercase
+        Int maxAttempts
+        
+        Boolean validatePassword(String password)
+        Boolean isLocked(User user)
+    }
+
+    class Session {
+        UUID id
+        User user
+        String token
+        DateTime lastActivity
+        String deviceInfo
+        String ipAddress
+        Boolean isActive
+        
+        Boolean isExpired()
+        void refresh()
+    }
+
+    class Claim {
+        UUID id
+        String name
+    }
+
+    class Role {
+        UUID id
+        String name
+        Claim[] claims
+
+        Boolean isAllowedTo(Claim claim)
+    }
+
+    class User {
+        UUID id
+        String firstName
+        String lastName
+        String email
+        Role role
+        String hashedPassword
+        UserStatus status
+        Int loginAttempts
+        DateTime lastLoginAttempt
+        DateTime createdAt
+        DateTime updatedAt
+        DateTime deletedAt
+        User createdBy
+
+        void incrementLoginAttempt()
+        void resetLoginAttempts()
+    }
+
+    class Hasher {
+        Boolean match(String text, String hashedText)
+        String hash(String text)
+    }
+
+    class UserInvitation {
+        UUID id
+        String invitedEmail
+        Role role
+        InvitationStatus status
+        DateTime invitedAt
+        Int expireIn
+        DateTime acceptedAt
+        String token
+        
+        Boolean isExpired()
+        void accept()
+        void cancel()
+    } 
+
+    Hasher --|> BcryptHasher
+
+    class OtpHandler {
+        String generateOtp(String key)
+        Boolean validateOtp(String otp)
+    }
+
+    interface IUserService {
+        User createUser(User user)
+        void updateUser(User user)
+        void deleteUser(UUID id)
+        Session createSession(User user, String deviceInfo, String ipAddress)
+        void invalidateSession(Session session)
+        UserInvitation inviteUser(String invitedEmail, Role role)
+    }
+
+    class UserService implements IUserService {
+        IUserRepository userRepository
+        ISessionRepository sessionRepository
+        IAuthenticationStrategy authStrategy
+        IPasswordPolicy passwordPolicy
+        NotificationController notificationController
+    }
+
+    class TokenPayload {
+        String userId
+        Claim claims
+    }
+
+    class JWTTokenGenerator {
+        String secret
+        
+        String generateToken(User user)
+        Boolean isValidToken(String token)
+        TokenPayload getTokenPayload(String token)
+    }
+}
+
+package Monitoring {
+    interface ILogRepository {
+        Log save(Log log)
+        List<Log> findByService(Service service)
+        List<Log> findByLevel(LogLevel level)
+        List<Log> findByDateRange(DateTime start, DateTime end)
+    }
+
+    interface ITraceRepository {
+        Trace save(Trace trace)
+        Trace findById(UUID id)
+        List<Trace> findByService(Service service)
+        List<Trace> findByDateRange(DateTime start, DateTime end)
+    }
+
+    interface IMonitoringService {
+        void logEvent(Log log)
+        void startTrace(Trace trace)
+        void endTrace(UUID traceId)
+        ServiceGraph generateServiceGraph(UUID traceId)
+    }
+
+    class MonitoringService implements IMonitoringService {
+        ILogRepository logRepository
+        ITraceRepository traceRepository
+    }
+
+    enum LogLevel {
+        INFO,
+        WARN,
+        DEBUG,
+        ERROR,
+        CRITICAL,
+    }
+
+    class Service {
+        UUID id
+        String serviceName
+        String ip
+    }
+
+    class Log {
+        UUID id
+        UUID requestId
+        Service service
+        String message
+        LogLevel level
+        DateTime loggedAt
+        HashMap metadata 
+    }
+
+    class Processable {
+        DateTime startedAt
+        DateTime finishedat
+
+        DateTime getProcessingTime()
+    }
+
+    class Request {
+        UUID id
+        Service service
+        String traceId
+        String serviceName
+        String operationName
+        HashMap metadata
+        DateTime startedAt
+        DateTime finishedat
+
+        DateTime getProcessingTime()
+    }
+
+    class Trace {
+        UUID id 
+        Service service
+        String transactionName
+        HashMap metadata
+        Set<Request> requests
+        Set<Log> logs
+        DateTime startAt
+        DateTime finishedAt
+
+        DateTime getProcessingTime()
+    }
+
+    Processable --|> Request
+    Processable --|> Trace
+
+    class ServiceGraph {
+        Trace trace
+        Service service
+        Request request
+        List<ServiceGraph> sleeve
+    }
+
+    class TraceCommandController {
+        List<Service> getServiceByTraceId(UUID traceId)
+        List<Log> getLogsByTraceId(UUID traceId)
+        List<Request> getRequestByTraceId(UUID traceId)
+        ServiceGraph getDependenciesGraphByTraceId(UUID traceId) 
+    }
+}
+
+package Notification {
+    interface IMessageTemplate {
+        Message compile(Map<String, String> values)
+        Boolean validate()
+    }
+
+    class MessageTemplate implements IMessageTemplate {
+        UUID id
+        String name
+        String subject
+        String content
+        Map<String, String> variables
+    }
+
+    interface INotificationStrategy {
+        void send(Message message, String[] recipients)
+        Boolean validateRecipients(String[] recipients)
+    }
+
+    class EmailStrategy implements INotificationStrategy {
+        SmtpConfig config
+    }
+
+    class SmsStrategy implements INotificationStrategy {
+        SmsProviderConfig config
+    }
+
+    class Message {
+        String subject
+        String content
+    }
+
+    abstract class NotificationRequest {
+        Message message
+        DateTime scheduledFor
+        Int retryCount
+        DateTime lastRetry
+        
+        abstract Boolean validate()
+        abstract void send()
+    }
+
+    class Email extends NotificationRequest {
+        String[] emails
+    }
+
+    class Sms extends NotificationRequest {
+        String[] phoneNumber
+    }
+
+    interface INotificationController {
+        void sendEmail(Email email)
+        void sendSms(Sms sms)
+        void scheduleEmail(Email email, DateTime scheduledFor)
+        void scheduleSms(Sms sms, DateTime scheduledFor)
+    }
+
+    class NotificationController implements INotificationController {
+        Map<String, INotificationStrategy> strategies
+        IMessageTemplate templateEngine
+    }
+}
+
+@enduml
