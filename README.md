@@ -19,12 +19,10 @@ Esta app es una app de concepto y solo por fines de explorar diferentes tecnolog
 - Maven
 - PostgreSQL
 - Docker
-- Neovim como editor, pero se podra correr desde la terminal
+- Neovim como editor tambien se puede correr en Vscode
 
 ## TODOs
 
 - [ ] Agregar versiones de todas las herramientas utilizadas
 - [ ] Agregar mas descripciones sobre las funcionalidades
-- [ ] posiblemente descope algunas de las cosas que quiero hacer porque aparentamente me puedo ir lejos agregando cosas
-- [ ] Investigar como se hace monorepo en Java.
-- [ ] Investigar como se hace un monorepo en C++.
+- [ ] Posiblemente descope algunas de las cosas que quiero hacer porque aparentamente me puedo ir lejos agregando cosas
