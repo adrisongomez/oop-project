@@ -2,23 +2,14 @@
 
 ## Resumen del proyecto
 
-La idea es crear una aplicacion de monitoreo que permita hacer:
-
-- Log Aggregation
-- Tracing
-- Metrics
-- Alarmas
-- Manejo de acceso basico
+La idea es crear una aplicacion de ecommerce
 
 Esta app es una app de concepto y solo por fines de explorar diferentes tecnologias
 
 ## Stack
 
-- Java
+- Java 23.0.2
 - Gradle
-- Maven
-- PostgreSQL
-- Docker
 - Neovim como editor tambien se puede correr en Vscode
 
 ## TODOs
