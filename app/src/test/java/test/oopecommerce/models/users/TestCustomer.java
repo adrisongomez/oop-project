@@ -3,8 +3,12 @@ package test.oopecommerce.models.users;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.UUID;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import com.oopecommerce.models.users.Customer;
 import com.oopecommerce.models.orders.Order;
+import com.oopecommerce.models.orders.Order.OrderStatus;
+import com.oopecommerce.models.addresses.ShippingAddress;
 
 public class TestCustomer {
 
@@ -35,8 +39,8 @@ public class TestCustomer {
 
         // The Order class needs to be accessible for this test
         // Assuming a simple Order class exists in com.oopecommerce.models.orders
-        Order order1 = new Order();
-        Order order2 = new Order();
+        Order order1 = new Order(null);
+        Order order2 = new Order(null);
 
         customer.addOrderToHistory(order1);
         assertEquals(1, customer.getPurchaseHistory().size());
@@ -48,9 +52,35 @@ public class TestCustomer {
     @Test
     public void testGetDashboardInfo() {
         Customer customer = new Customer(UUID.randomUUID(), "test@test.com", "pass", "John Doe", "none");
-        customer.addOrderToHistory(new com.oopecommerce.models.orders.Order());
+        customer.addOrderToHistory(new com.oopecommerce.models.orders.Order(null));
         String info = customer.getDashboardInfo();
         assertTrue(info.contains("John Doe"));
         assertTrue(info.contains("1 items in your purchase history"));
+    }
+
+    @Test
+    public void testViewOrderHistoryOverloading() throws InterruptedException {
+        Customer customer = new Customer(UUID.randomUUID(), "test@test.com", "pass", "Test User", "none");
+        ShippingAddress address = new ShippingAddress("123 Test St", "Testville", "TS", "12345", "USA");
+
+        // Create orders with different dates and statuses
+        Order order1 = new Order(new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(10)), OrderStatus.DELIVERED, address, 10.0);
+        Order order2 = new Order(new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(5)), OrderStatus.SHIPPED, address, 5.0);
+        Order order3 = new Order(new Date(), OrderStatus.PENDING, address, 15.0);
+        
+        customer.addOrderToHistory(order1);
+        customer.addOrderToHistory(order2);
+        customer.addOrderToHistory(order3);
+
+        // Test: viewOrderHistory() - get all
+        assertEquals(3, customer.viewOrderHistory().size());
+
+        // Test: viewOrderHistory(Date since)
+        Date filterDate = new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7));
+        assertEquals(2, customer.viewOrderHistory(filterDate).size());
+
+        // Test: viewOrderHistory(OrderStatus status)
+        assertEquals(1, customer.viewOrderHistory(OrderStatus.DELIVERED).size());
+        assertEquals(1, customer.viewOrderHistory(OrderStatus.PENDING).size());
     }
 } 

@@ -58,4 +58,10 @@ public class PhysicalProduct extends Product {
                "\nDimensions: " + this.dimensions +
                "\nLocation: " + this.inventoryLocation.toString();
     }
+
+    @Override
+    public double calculateShippingCost() {
+        // Example calculation: $2.5 per kg
+        return this.weight * 2.5;
+    }
 } 

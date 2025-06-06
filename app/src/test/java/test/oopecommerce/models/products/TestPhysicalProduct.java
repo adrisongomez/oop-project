@@ -51,4 +51,13 @@ public class TestPhysicalProduct {
         assertTrue(details.contains("Weight: 2.5 kg"));
         assertTrue(details.contains("Location: " + location.toString()));
     }
+
+    @Test
+    public void testCalculateShippingCost() {
+        InventoryLocation location = new InventoryLocation("WH1", "123 Main St", "CityA", "CountryA");
+        PhysicalProduct product = new PhysicalProduct(UUID.randomUUID(), "Laptop", "Powerful laptop", Product.ProductStatus.ACTIVE, null, null, 2.0, "15-inch", location);
+        
+        // 2.0kg * $2.5/kg = $5.0
+        assertEquals(5.0, product.calculateShippingCost(), 0.001);
+    }
 } 

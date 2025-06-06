@@ -68,4 +68,9 @@ public class DigitalProduct extends Product {
                "\nFile Size: " + this.fileSize + " MB" +
                "\nStorage: " + this.storage;
     }
+
+    @Override
+    public double calculateShippingCost() {
+        return 0.0;
+    }
 } 

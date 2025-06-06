@@ -57,4 +57,10 @@ public class TestDigitalProduct {
         assertTrue(details.contains("File Format: EPUB"));
         assertTrue(details.contains("File Size: 2.1 MB"));
     }
+
+    @Test
+    public void testCalculateShippingCost() {
+        DigitalProduct product = new DigitalProduct(UUID.randomUUID(), "E-book", "An exciting novel", Product.ProductStatus.ACTIVE, null, null, "EPUB", 2.1, "/storage/books");
+        assertEquals(0.0, product.calculateShippingCost(), 0.001);
+    }
 } 
