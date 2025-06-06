@@ -38,4 +38,9 @@ public class Customer extends User {
         return super.equals(other) &&
                this.preferences.equals(other.getPreferences());
     }
+
+    @Override
+    public String getDashboardInfo() {
+        return "Welcome, " + this.getName() + "! You have " + this.purchaseHistory.size() + " items in your purchase history.";
+    }
 } 

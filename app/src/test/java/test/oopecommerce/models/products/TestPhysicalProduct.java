@@ -40,4 +40,15 @@ public class TestPhysicalProduct {
         product.setInventoryLocation(newLocation);
         assertEquals(newLocation, product.getInventoryLocation());
     }
+
+    @Test
+    public void testShowDetail() {
+        InventoryLocation location = new InventoryLocation("WH1", "123 Main St", "CityA", "CountryA");
+        PhysicalProduct product = new PhysicalProduct(UUID.randomUUID(), "Laptop", "Powerful laptop", Product.ProductStatus.ACTIVE, null, null, 2.5, "15-inch", location);
+
+        String details = product.showDetail();
+        assertTrue(details.contains("Product Name: Laptop"));
+        assertTrue(details.contains("Weight: 2.5 kg"));
+        assertTrue(details.contains("Location: " + location.toString()));
+    }
 } 

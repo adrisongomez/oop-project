@@ -49,4 +49,11 @@ public class TestAdmin {
         admin.setPromotion(product, 0.2);
         assertEquals("Setting promotion for product: Test Product, discount: 0.2\n", outContent.toString());
     }
+
+    @Test
+    public void testGetDashboardInfo() {
+        Admin admin = new Admin(UUID.randomUUID(), "admin@test.com", "pass", "Jane Admin");
+        String info = admin.getDashboardInfo();
+        assertTrue(info.contains("Admin Dashboard for Jane Admin"));
+    }
 } 

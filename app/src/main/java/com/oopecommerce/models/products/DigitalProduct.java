@@ -60,4 +60,12 @@ public class DigitalProduct extends Product {
                this.fileSize == product.getFileSize() &&
                this.storage.equals(product.getStorage());
     }
+
+    @Override
+    public String showDetail() {
+        return super.showDetail() +
+               "\nFile Format: " + this.fileFormat +
+               "\nFile Size: " + this.fileSize + " MB" +
+               "\nStorage: " + this.storage;
+    }
 } 

@@ -87,4 +87,13 @@ public class Product {
             this.variants = new ArrayList<>();
         }
     }
+
+    public String showDetail() {
+        return "Product Name: " + this.name + "\nDescription: " + this.description + "\nStatus: " + this.status;
+    }
+
+    public double calculateShippingCost() {
+        // Default shipping cost for a generic product
+        return 5.00;
+    }
 }

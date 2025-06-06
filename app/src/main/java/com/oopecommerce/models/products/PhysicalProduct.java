@@ -50,4 +50,12 @@ public class PhysicalProduct extends Product {
                this.dimensions.equals(product.getDimensions()) &&
                this.inventoryLocation.equals(product.getInventoryLocation());
     }
+
+    @Override
+    public String showDetail() {
+        return super.showDetail() +
+               "\nWeight: " + this.weight + " kg" +
+               "\nDimensions: " + this.dimensions +
+               "\nLocation: " + this.inventoryLocation.toString();
+    }
 } 

@@ -44,4 +44,13 @@ public class TestCustomer {
         customer.addOrderToHistory(order2);
         assertEquals(2, customer.getPurchaseHistory().size());
     }
+
+    @Test
+    public void testGetDashboardInfo() {
+        Customer customer = new Customer(UUID.randomUUID(), "test@test.com", "pass", "John Doe", "none");
+        customer.addOrderToHistory(new com.oopecommerce.models.orders.Order());
+        String info = customer.getDashboardInfo();
+        assertTrue(info.contains("John Doe"));
+        assertTrue(info.contains("1 items in your purchase history"));
+    }
 } 

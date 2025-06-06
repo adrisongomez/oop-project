@@ -24,4 +24,9 @@ public class Admin extends User {
         if (other == null) return false;
         return super.equals(other);
     }
+
+    @Override
+    public String getDashboardInfo() {
+        return "Admin Dashboard for " + this.getName() + ". Manage products, users, and promotions.";
+    }
 } 

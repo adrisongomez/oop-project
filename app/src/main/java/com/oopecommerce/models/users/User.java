@@ -46,4 +46,8 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getDashboardInfo() {
+        return "Welcome, " + this.name + "!";
+    }
 }

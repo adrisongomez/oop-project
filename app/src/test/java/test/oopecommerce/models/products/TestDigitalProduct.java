@@ -47,4 +47,14 @@ public class TestDigitalProduct {
         assertEquals(expectedLink, generatedLink);
         assertEquals(expectedLink, product.getDownloadUrl());
     }
+
+    @Test
+    public void testShowDetail() {
+        DigitalProduct product = new DigitalProduct(UUID.randomUUID(), "E-book", "An exciting novel", Product.ProductStatus.ACTIVE, null, null, "EPUB", 2.1, "/storage/books");
+
+        String details = product.showDetail();
+        assertTrue(details.contains("Product Name: E-book"));
+        assertTrue(details.contains("File Format: EPUB"));
+        assertTrue(details.contains("File Size: 2.1 MB"));
+    }
 } 
