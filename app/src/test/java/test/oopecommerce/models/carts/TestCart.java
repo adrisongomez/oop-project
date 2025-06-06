@@ -10,7 +10,8 @@ import java.util.UUID;
 import org.junit.Test;
 
 import com.oopecommerce.models.carts.Cart;
-import com.oopecommerce.models.carts.CartLineItem;
+import com.oopecommerce.models.inventory.InventoryLocation;
+import com.oopecommerce.models.products.PhysicalProduct;
 import com.oopecommerce.models.products.Product;
 import com.oopecommerce.models.products.ProductVariant;
 import com.oopecommerce.models.users.User;
@@ -50,7 +51,8 @@ public class TestCart {
         ProductVariant variant2 = new ProductVariant(UUID.randomUUID(), "SKU002", Arrays.asList("Blue", "Medium"), 1, null, 25.99, "180");
         List<ProductVariant> variants = new ArrayList<>(Arrays.asList(variant1, variant2));
 
-        Product product = new Product(UUID.randomUUID(), "T-Shirt", "A cool t-shirt", Product.ProductStatus.ACTIVE, null, variants);
+        InventoryLocation location = new InventoryLocation("A1", "Warehouse", "City", "Country");
+        Product product = new PhysicalProduct(UUID.randomUUID(), "T-Shirt", "A cool t-shirt", Product.ProductStatus.ACTIVE, null, variants, 0.2, "M", location);
 
         // Test: addItem(ProductVariant variant, int quantity)
         cart.addItem(variant1, 2);
@@ -70,10 +72,10 @@ public class TestCart {
 
         // Test: addItem(Product product, int quantity) - adds first variant
         Cart cart2 = new Cart(user);
-        Product product2 = new Product(UUID.randomUUID(), "Mug", "A nice mug", Product.ProductStatus.ACTIVE, null, new ArrayList<>(Arrays.asList(variant2, variant1)));
+        Product product2 = new PhysicalProduct(UUID.randomUUID(), "Mug", "A nice mug", Product.ProductStatus.ACTIVE, null, new ArrayList<>(Arrays.asList(variant2, variant1)), 0.5, "Standard", location);
         cart2.addItem(product2, 5);
         assertEquals(1, cart2.getLineItems().size());
-        assertEquals("SKU002", cart2.getLineItems().get(0).getVariant().getSku());
+        assertEquals("SKU001", cart2.getLineItems().get(0).getVariant().getSku());
         assertEquals(5, cart2.getLineItems().get(0).getQuantity());
     }
 
