@@ -7,7 +7,7 @@ import java.util.UUID;
 import com.oopecommerce.utils.sorts.SortDirection;
 import com.oopecommerce.utils.sorts.SortableUtils;
 
-public class Product {
+public abstract class Product {
 
     static public enum ProductStatus {
         DRAFT,
@@ -16,11 +16,11 @@ public class Product {
     }
 
     final UUID id;
-    String name;
-    String description;
-    ProductStatus status;
-    List<ProductMedia> medias;
-    List<ProductVariant> variants;
+    private String name;
+    private String description;
+    private ProductStatus status;
+    private List<ProductMedia> medias;
+    private List<ProductVariant> variants;
 
     public Product(UUID id, String name, String description, ProductStatus status,
             List<ProductMedia> medias, List<ProductVariant> variants) {
@@ -92,8 +92,5 @@ public class Product {
         return "Product Name: " + this.name + "\nDescription: " + this.description + "\nStatus: " + this.status;
     }
 
-    public double calculateShippingCost() {
-        // Default shipping cost for a generic product
-        return 5.00;
-    }
+    public abstract double calculateShippingCost();
 }

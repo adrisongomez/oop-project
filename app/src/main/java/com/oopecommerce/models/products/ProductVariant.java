@@ -6,22 +6,22 @@ import java.util.UUID;
 import com.oopecommerce.utils.sorts.ISortable;
 
 public class ProductVariant implements ISortable {
-    final UUID id;
-    String sku;
-    List<String> options;
-    int position;
-    ProductMedia featureMedia;
-    double price;
-    String weightInGrams;
+    private final UUID id;
+    private String sku;
+    private List<String> options;
+    private int position;
+    private ProductMedia featureMedia;
+    private double price;
+    private String weightInGrams;
 
     public ProductVariant(UUID id, String sku, List<String> options, int position, ProductMedia featureMedia,
             double price, String weightInGrams) {
         this.id = id;
         this.sku = sku;
         this.options = options;
-        this.position = position;
+        this.setPosition(position);
         this.featureMedia = featureMedia;
-        this.price = price;
+        this.setPrice(price);
         this.weightInGrams = weightInGrams;
     }
 
@@ -54,7 +54,10 @@ public class ProductVariant implements ISortable {
         this.options = options;
     }
 
-    public void setPosition(Integer position) {
+    public void setPosition(int position) {
+        if (position < 0) {
+            throw new IllegalArgumentException("Position cannot be negative.");
+        }
         this.position = position;
     }
 
@@ -70,7 +73,10 @@ public class ProductVariant implements ISortable {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Price cannot be negative.");
+        }
         this.price = price;
     }
 

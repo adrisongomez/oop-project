@@ -7,10 +7,11 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import com.oopecommerce.models.users.Customer;
 import com.oopecommerce.models.orders.Order;
-import com.oopecommerce.models.orders.Order.OrderStatus;
 import com.oopecommerce.models.addresses.ShippingAddress;
 
 public class TestCustomer {
+
+    private final ShippingAddress genericAddress = new ShippingAddress("123 Main", "Anytown", "Anystate", "12345", "USA");
 
     @Test
     public void testCustomerEquals() {
@@ -22,7 +23,7 @@ public class TestCustomer {
 
         assertTrue(c1.equals(c2));
         assertFalse(c1.equals(c3));
-        assertFalse(c1.equals(c4)); // Different preferences
+        assertFalse(c1.equals(c4));
     }
 
     @Test
@@ -36,15 +37,10 @@ public class TestCustomer {
     public void testPurchaseHistory() {
         Customer customer = new Customer(UUID.randomUUID(), "test@test.com", "pass", "Test", "none");
         assertTrue(customer.getPurchaseHistory().isEmpty());
-
-        // The Order class needs to be accessible for this test
-        // Assuming a simple Order class exists in com.oopecommerce.models.orders
-        Order order1 = new Order(null);
-        Order order2 = new Order(null);
-
+        Order order1 = new Order(new Date(), Order.OrderStatus.PENDING, genericAddress, 0);
+        Order order2 = new Order(new Date(), Order.OrderStatus.PENDING, genericAddress, 0);
         customer.addOrderToHistory(order1);
         assertEquals(1, customer.getPurchaseHistory().size());
-        
         customer.addOrderToHistory(order2);
         assertEquals(2, customer.getPurchaseHistory().size());
     }
@@ -52,35 +48,38 @@ public class TestCustomer {
     @Test
     public void testGetDashboardInfo() {
         Customer customer = new Customer(UUID.randomUUID(), "test@test.com", "pass", "John Doe", "none");
-        customer.addOrderToHistory(new com.oopecommerce.models.orders.Order(null));
+        customer.addOrderToHistory(new Order(new Date(), Order.OrderStatus.PENDING, genericAddress, 0));
         String info = customer.getDashboardInfo();
         assertTrue(info.contains("John Doe"));
         assertTrue(info.contains("1 items in your purchase history"));
     }
 
     @Test
-    public void testViewOrderHistoryOverloading() throws InterruptedException {
+    public void testViewOrderHistoryOverloading() {
         Customer customer = new Customer(UUID.randomUUID(), "test@test.com", "pass", "Test User", "none");
-        ShippingAddress address = new ShippingAddress("123 Test St", "Testville", "TS", "12345", "USA");
-
-        // Create orders with different dates and statuses
-        Order order1 = new Order(new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(10)), OrderStatus.DELIVERED, address, 10.0);
-        Order order2 = new Order(new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(5)), OrderStatus.SHIPPED, address, 5.0);
-        Order order3 = new Order(new Date(), OrderStatus.PENDING, address, 15.0);
+        
+        Order order1 = new Order(new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(10)), Order.OrderStatus.DELIVERED, genericAddress, 10.0);
+        Order order2 = new Order(new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(5)), Order.OrderStatus.SHIPPED, genericAddress, 5.0);
+        Order order3 = new Order(new Date(), Order.OrderStatus.PENDING, genericAddress, 15.0);
         
         customer.addOrderToHistory(order1);
         customer.addOrderToHistory(order2);
         customer.addOrderToHistory(order3);
 
-        // Test: viewOrderHistory() - get all
         assertEquals(3, customer.viewOrderHistory().size());
-
-        // Test: viewOrderHistory(Date since)
         Date filterDate = new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7));
         assertEquals(2, customer.viewOrderHistory(filterDate).size());
+        assertEquals(1, customer.viewOrderHistory(Order.OrderStatus.DELIVERED).size());
+        assertEquals(1, customer.viewOrderHistory(Order.OrderStatus.PENDING).size());
+    }
 
-        // Test: viewOrderHistory(OrderStatus status)
-        assertEquals(1, customer.viewOrderHistory(OrderStatus.DELIVERED).size());
-        assertEquals(1, customer.viewOrderHistory(OrderStatus.PENDING).size());
+    @Test(expected = IllegalArgumentException.class)
+    public void testUserInvalidEmail() {
+        new Customer(UUID.randomUUID(), "invalid-email", "pass", "Test User", "none");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testUserEmptyName() {
+        new Customer(UUID.randomUUID(), "valid@email.com", "pass", "  ", "none");
     }
 } 

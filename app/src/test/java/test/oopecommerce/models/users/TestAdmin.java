@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.util.UUID;
 import com.oopecommerce.models.users.Admin;
 import com.oopecommerce.models.products.Product;
+import com.oopecommerce.models.products.PhysicalProduct;
+import com.oopecommerce.models.inventory.InventoryLocation;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -37,7 +39,8 @@ public class TestAdmin {
     @Test
     public void testManageInventory() {
         Admin admin = new Admin(UUID.randomUUID(), "admin@test.com", "pass", "Admin");
-        Product product = new Product(UUID.randomUUID(), "Test Product", "Desc", Product.ProductStatus.ACTIVE, null, null);
+        InventoryLocation location = new InventoryLocation("code", "street", "city", "country");
+        Product product = new PhysicalProduct(UUID.randomUUID(), "Test Product", "Desc", Product.ProductStatus.ACTIVE, null, null, 1.0, "dims", location);
         admin.manageInventory(product, 100);
         assertEquals("Managing inventory for product: Test Product, new quantity: 100\n", outContent.toString());
     }
@@ -45,7 +48,8 @@ public class TestAdmin {
     @Test
     public void testSetPromotion() {
         Admin admin = new Admin(UUID.randomUUID(), "admin@test.com", "pass", "Admin");
-        Product product = new Product(UUID.randomUUID(), "Test Product", "Desc", Product.ProductStatus.ACTIVE, null, null);
+        InventoryLocation location = new InventoryLocation("code", "street", "city", "country");
+        Product product = new PhysicalProduct(UUID.randomUUID(), "Test Product", "Desc", Product.ProductStatus.ACTIVE, null, null, 1.0, "dims", location);
         admin.setPromotion(product, 0.2);
         assertEquals("Setting promotion for product: Test Product, discount: 0.2\n", outContent.toString());
     }

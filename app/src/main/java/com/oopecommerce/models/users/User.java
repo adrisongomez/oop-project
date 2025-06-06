@@ -1,18 +1,22 @@
 package com.oopecommerce.models.users;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class User {
-    final UUID id;
-    String email;
-    String hashedPassword;
-    String name;
+    private final UUID id;
+    private String email;
+    private String hashedPassword;
+    private String name;
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(
+        "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
 
     public User(UUID id, String email, String hashedPassword, String name) {
         this.id = id;
-        this.email = email;
+        this.setEmail(email);
         this.hashedPassword = hashedPassword;
-        this.name = name;
+        this.setName(name);
     }
 
     public Boolean equals(User u) {
@@ -28,6 +32,9 @@ public class User {
     }
 
     public void setEmail(String email) {
+        if (email == null || !EMAIL_PATTERN.matcher(email).matches()) {
+            throw new IllegalArgumentException("Invalid email format.");
+        }
         this.email = email;
     }
 
@@ -44,6 +51,9 @@ public class User {
     }
 
     public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty.");
+        }
         this.name = name;
     }
 
