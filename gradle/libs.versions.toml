@@ -3,6 +3,10 @@
 
 [versions]
 guava = "33.4.5-jre"
+hibernate = "6.5.2.Final"
+postgres = "42.7.2"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
+hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernate" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgres" }
