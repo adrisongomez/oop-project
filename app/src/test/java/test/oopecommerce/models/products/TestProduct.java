@@ -1,12 +1,12 @@
 package test.oopecommerce.models.products;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.oopecommerce.models.inventory.InventoryLocation;
 import com.oopecommerce.models.products.PhysicalProduct;
@@ -70,13 +70,17 @@ public class TestProduct {
                 assertArrayEquals(expectedValue, value);
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test
         public void testProductVariantNegativePrice() {
-                new ProductVariant(UUID.randomUUID(), "SKU-NEG", null, 0, null, -10.0, "100");
+                assertThrows(IllegalArgumentException.class, () -> {
+                        new ProductVariant(UUID.randomUUID(), "SKU-NEG", null, 0, null, -10.0, "100");
+                });
         }
 
-        @Test(expected = IllegalArgumentException.class)
+        @Test
         public void testProductVariantNegativePosition() {
-                new ProductVariant(UUID.randomUUID(), "SKU-NEG", null, -1, null, 10.0, "100");
+                assertThrows(IllegalArgumentException.class, () -> {
+                        new ProductVariant(UUID.randomUUID(), "SKU-NEG", null, -1, null, 10.0, "100");
+                });
         }
 }

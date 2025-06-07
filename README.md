@@ -39,4 +39,24 @@ automáticamente si está presente.
 
 - [ ] Agregar versiones de todas las herramientas utilizadas
 - [ ] Agregar mas descripciones sobre las funcionalidades
-- [ ] Posiblemente descope algunas de las cosas que quiero hacer porque aparentemente me puedo ir lejos agregando cosas
+- [ ] Posiblemente descope algunas de las cosas que quiero hacer porque aparentamente me puedo ir lejos agregando cosas
+
+### Endpoints
+
+La aplicación cuenta con un endpoint básico de revisión de salud:
+
+```
+GET /checkhealth
+```
+
+que devuelve `{ "status": "ok" }`.
+
+### Documentación Swagger
+
+Se ha integrado `springdoc-openapi` para generar documentación automática.
+
+Al ejecutar la aplicación con Spring Boot, la documentación se puede visitar en:
+
+```
+http://localhost:8080/swagger-ui.html
+```

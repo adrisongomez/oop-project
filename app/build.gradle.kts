@@ -7,7 +7,8 @@
  */
 
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
+    id("org.springframework.boot") version "3.2.5"
+    id("io.spring.dependency-management") version "1.1.4"
     application
 }
 
@@ -22,16 +23,13 @@ dependencies {
     implementation(libs.hibernate.core)
     implementation(libs.postgresql)
     implementation(libs.dotenv.java)
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-testing {
-    suites {
-        // Configure the built-in test suite
-        val test by getting(JvmTestSuite::class) {
-            // Use JUnit4 test framework
-            useJUnit("4.13.2")
-        }
-    }
+tasks.test {
+    useJUnitPlatform()
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -42,6 +40,5 @@ java {
 }
 
 application {
-    // Define the main class for the application.
-    mainClass = "com.oopecommerce"
+    mainClass.set("com.oopecommerce.OopEcommerceApplication")
 }
