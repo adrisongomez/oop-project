@@ -1,7 +1,7 @@
 package test.oopecommerce.models.users;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.util.UUID;
 import com.oopecommerce.models.users.Admin;
 import com.oopecommerce.models.products.Product;
@@ -15,12 +15,12 @@ public class TestAdmin {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
 
-    @org.junit.Before
+    @org.junit.jupiter.api.BeforeEach
     public void setUpStreams() {
         System.setOut(new PrintStream(outContent));
     }
 
-    @org.junit.After
+    @org.junit.jupiter.api.AfterEach
     public void restoreStreams() {
         System.setOut(originalOut);
     }
