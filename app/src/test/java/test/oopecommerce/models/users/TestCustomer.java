@@ -1,7 +1,7 @@
 package test.oopecommerce.models.users;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.util.UUID;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -73,13 +73,17 @@ public class TestCustomer {
         assertEquals(1, customer.viewOrderHistory(Order.OrderStatus.PENDING).size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testUserInvalidEmail() {
-        new Customer(UUID.randomUUID(), "invalid-email", "pass", "Test User", "none");
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Customer(UUID.randomUUID(), "invalid-email", "pass", "Test User", "none");
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testUserEmptyName() {
-        new Customer(UUID.randomUUID(), "valid@email.com", "pass", "  ", "none");
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Customer(UUID.randomUUID(), "valid@email.com", "pass", "  ", "none");
+        });
     }
-} 
+}

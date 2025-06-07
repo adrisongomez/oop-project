@@ -1,12 +1,12 @@
 package test.oopecommerce.utils.sorts;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.oopecommerce.utils.sorts.ISortable;
 import com.oopecommerce.utils.sorts.SortDirection;
@@ -49,7 +49,7 @@ public class TestSortableUtils {
             int[] expectedValue = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
             assertArrayEquals(expectedValue, value);
         } catch (Exception error) {
-            assertFalse("Error should not be throw", true);
+            fail("Error should not be throw");
         }
 
     }

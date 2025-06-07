@@ -1,13 +1,13 @@
 package test.oopecommerce.models.carts;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.oopecommerce.models.carts.Cart;
 import com.oopecommerce.models.inventory.InventoryLocation;
