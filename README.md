@@ -16,4 +16,4 @@ Esta app es una app de concepto y solo por fines de explorar diferentes tecnolog
 
 - [ ] Agregar versiones de todas las herramientas utilizadas
 - [ ] Agregar mas descripciones sobre las funcionalidades
-- [ ] Posiblemente descope algunas de las cosas que quiero hacer porque aparentamente me puedo ir lejos agregando cosas
+- [ ] Posiblemente descope algunas de las cosas que quiero hacer porque aparentemente me puedo ir lejos agregando cosas
