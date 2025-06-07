@@ -89,5 +89,10 @@ nb-configuration.xml
 ##############################
 *.log
 
+# Environment files
+.env
+.env.*
+!.env.example
+
 # Ignore Gradle build output directory
 build

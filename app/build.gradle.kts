@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.guava)
     implementation(libs.hibernate.core)
     implementation(libs.postgresql)
+    implementation(libs.dotenv.java)
 }
 
 testing {

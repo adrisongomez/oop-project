@@ -2,9 +2,11 @@ package com.oopecommerce.utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import github.cdimascio.dotenv.Dotenv;
 
 public class HibernateUtil {
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+atic final SessionFactory sessionFactory = buildSessionFactory();
 
     private static SessionFactory buildSessionFactory() {
         try {
@@ -22,6 +24,10 @@ public class HibernateUtil {
 
     private static void overrideProperty(Configuration cfg, String propertyName, String envVar) {
         String value = System.getenv(envVar);
+        String value = dotenv.get(envVar);
+        if (value == null || value.isEmpty()) {
+            value = System.getenv(envVar);
+        }
         if (value != null && !value.isEmpty()) {
             cfg.setProperty(propertyName, value);
         }
