@@ -20,7 +20,7 @@ public class User {
     }
 
     public Boolean equals(User u) {
-        return this.id.equals(u.getId());
+        return u != null && this.id.equals(u.getId());
     }
 
     public UUID getId() {

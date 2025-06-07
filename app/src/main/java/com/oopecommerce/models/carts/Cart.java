@@ -89,7 +89,7 @@ public class Cart {
     }
 
     public Boolean equals(Cart cart) {
-        return this.id.equals(cart.id);
+        return cart != null && this.id.equals(cart.id);
     }
 
     public UUID getId() {

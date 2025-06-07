@@ -25,7 +25,7 @@ public class CartLineItem {
     }
 
     public Boolean equals(CartLineItem cart) {
-        return cart.variant.equals(this.variant);
+        return cart != null && cart.variant.equals(this.variant);
     }
 
     public UUID getId() {
