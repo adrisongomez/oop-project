@@ -23,6 +23,14 @@ public class TestCartLineItem {
     }
 
     @Test
+    public void cartLineItemEqualsNull() {
+        ProductVariant variant = new ProductVariant(UUID.randomUUID(), null, null, 0, null, 0, null);
+        CartLineItem lineItem = new CartLineItem(null, variant, 1, null, null);
+
+        assertFalse(lineItem.equals(null));
+    }
+
+    @Test
     public void cartLineItemTotal() {
         ProductVariant variant = new ProductVariant(UUID.randomUUID(), null, null, 0, null, 100.0, null);
         CartLineItem lineItem1 = new CartLineItem(null, variant, 10, null, null);

@@ -44,4 +44,18 @@ public class TestProductVariant {
                 assertFalse(pv2.equals(pv3));
                 assertTrue(pv1.equals(pv3));
         }
+
+        @Test
+        public void productVariantEqualsNull() {
+                ProductVariant pv = new ProductVariant(
+                                UUID.randomUUID(),
+                                "sku",
+                                null,
+                                0,
+                                null,
+                                0,
+                                "");
+
+                assertFalse(pv.equals(null));
+        }
 }

@@ -19,4 +19,11 @@ public class TestUser {
         assertTrue(user1.equals(user2));
         assertFalse(user1.equals(user3));
     }
+
+    @Test
+    public void testEqualsNull() {
+        User user = new User(UUID.randomUUID(), "a@example.com", "hash1", "A");
+
+        assertFalse(user.equals(null));
+    }
 }

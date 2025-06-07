@@ -43,6 +43,14 @@ public class TestCart {
     }
 
     @Test
+    public void testCartEqualsNull() {
+        User user = new User(UUID.randomUUID(), "test@user.com", "password", "Test User");
+        Cart cart = new Cart(user);
+
+        assertFalse(cart.equals(null));
+    }
+
+    @Test
     public void testAddItemOverloading() {
         User user = new User(UUID.randomUUID(), "test@user.com", "password", "Test User");
         Cart cart = new Cart(user);

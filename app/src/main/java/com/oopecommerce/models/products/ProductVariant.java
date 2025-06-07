@@ -26,7 +26,7 @@ public class ProductVariant implements ISortable {
     }
 
     public Boolean equals(ProductVariant variant) {
-        return id.equals(variant.id);
+        return variant != null && this.id.equals(variant.id);
     }
 
     @Override
