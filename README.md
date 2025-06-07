@@ -8,7 +8,7 @@ Esta app es una app de concepto y solo por fines de explorar diferentes tecnolog
 
 ## Stack
 
-- Java 23.0.2
+ - Java 21 (ver configurado en `app/build.gradle.kts`)
 - Gradle
 - Neovim como editor tambien se puede correr en Vscode
 
