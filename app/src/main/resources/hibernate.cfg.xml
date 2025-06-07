@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/oopecommerce</property>
+        <property name="hibernate.connection.username">oopecom</property>
+        <property name="hibernate.connection.password">secret</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+        <!-- Estos valores pueden ser sobrescritos a traves de variables de entorno
+             (incluyendo las cargadas desde un archivo .env) revisadas en HibernateUtil -->
+    </session-factory>
+</hibernate-configuration>

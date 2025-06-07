@@ -10,7 +10,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@SpringBootTest
+
+@SpringBootTest(classes = com.oopecommerce.OopEcommerceApplication.class)
 @AutoConfigureMockMvc
 public class HealthControllerTest {
     @Autowired

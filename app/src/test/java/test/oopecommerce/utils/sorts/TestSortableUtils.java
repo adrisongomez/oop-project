@@ -1,7 +1,8 @@
 package test.oopecommerce.utils.sorts;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,13 +44,17 @@ public class TestSortableUtils {
                 new TestClass(5));
 
         try {
-
             int[] value = SortableUtils.sortByPosition(items, SortDirection.ASC).stream()
-                    .mapToInt((v) -> v.getPosition()).toArray();
+                    .mapToInt(v -> v.getPosition()).toArray();
             int[] expectedValue = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
             assertArrayEquals(expectedValue, value);
+
+            int[] descValue = SortableUtils.sortByPosition(items, SortDirection.DESC).stream()
+                    .mapToInt(v -> v.getPosition()).toArray();
+            int[] expectedDesc = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+            assertArrayEquals(expectedDesc, descValue);
         } catch (Exception error) {
-            assertFalse("Error should not be throw", true);
+            fail("Error should not be thrown");
         }
 
     }
