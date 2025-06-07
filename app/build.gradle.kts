@@ -19,6 +19,9 @@ repositories {
 dependencies {
     // This dependency is used by the application.
     implementation(libs.guava)
+    implementation(libs.hibernate.core)
+    implementation(libs.postgresql)
+    implementation(libs.dotenv.java)
 }
 
 testing {
