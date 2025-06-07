@@ -1,12 +1,13 @@
 package test.oopecommerce.utils.sorts;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.oopecommerce.utils.sorts.ISortable;
 import com.oopecommerce.utils.sorts.SortDirection;

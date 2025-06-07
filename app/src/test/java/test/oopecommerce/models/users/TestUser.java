@@ -1,10 +1,10 @@
 package test.oopecommerce.models.users;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.oopecommerce.models.users.User;
 

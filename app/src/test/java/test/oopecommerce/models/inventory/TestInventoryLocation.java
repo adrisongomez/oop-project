@@ -1,7 +1,7 @@
 package test.oopecommerce.models.inventory;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import com.oopecommerce.models.inventory.InventoryLocation;
 
 public class TestInventoryLocation {
