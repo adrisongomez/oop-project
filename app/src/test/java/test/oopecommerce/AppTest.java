@@ -3,11 +3,11 @@
  */
 package test.oopecommerce;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.oopecommerce.App;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AppTest {
     @Test public void appHasAGreeting() {
