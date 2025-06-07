@@ -18,6 +18,11 @@ repositories {
 }
 
 dependencies {
+    // This dependency is used by the application.
+    implementation(libs.guava)
+    implementation(libs.hibernate.core)
+    implementation(libs.postgresql)
+    implementation(libs.dotenv.java)
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
