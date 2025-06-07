@@ -10,6 +10,7 @@ public class HibernateUtil {
 
     private static SessionFactory buildSessionFactory() {
         try {
+
             Configuration cfg = new Configuration().configure();
             overrideProperty(cfg, "hibernate.connection.url", "HIBERNATE_CONN_URL");
             overrideProperty(cfg, "hibernate.connection.username", "HIBERNATE_CONN_USERNAME");
