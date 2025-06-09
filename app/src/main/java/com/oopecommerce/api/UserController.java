@@ -2,10 +2,7 @@ package com.oopecommerce.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,22 +30,25 @@ import com.oopecommerce.models.users.User;
 import com.google.gson.Gson;
 import com.oopecommerce.utils.hasher.Hasher;
 import com.oopecommerce.utils.hasher.BcryptHasher;
+import com.oopecommerce.repositories.UserRepository;
+import com.oopecommerce.security.JwtTokenService;
+import com.oopecommerce.security.SessionStore;
 
 @RestController
 @RequestMapping("/users")
 @Tag(name = "Users", description = "Operations related to application users")
 public class UserController {
 
-    private final Map<UUID, User> users = new ConcurrentHashMap<>();
     private final Gson gson = new Gson();
     private final Hasher hasher = new BcryptHasher();
+    private final UserRepository repository;
+    private final JwtTokenService jwtService;
+    private final SessionStore sessionStore;
 
-    public UserController() {
-        // Mock data
-        User u1 = new User(UUID.fromString("00000000-0000-0000-0000-000000000001"), "john@example.com", "hash1", "John");
-        User u2 = new User(UUID.fromString("00000000-0000-0000-0000-000000000002"), "jane@example.com", "hash2", "Jane");
-        users.put(u1.getId(), u1);
-        users.put(u2.getId(), u2);
+    public UserController(UserRepository repository, JwtTokenService jwtService, SessionStore sessionStore) {
+        this.repository = repository;
+        this.jwtService = jwtService;
+        this.sessionStore = sessionStore;
     }
 
 
@@ -63,7 +63,7 @@ public class UserController {
         UUID id = UUID.randomUUID();
         String hashed = hasher.hash(req.getPassword());
         User user = new User(id, req.getEmail(), hashed, req.getName());
-        users.put(id, user);
+        repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(toDto(user)));
@@ -72,7 +72,7 @@ public class UserController {
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing user")
     public ResponseEntity<String> updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserInput req) {
-        User existing = users.get(id);
+        User existing = repository.findById(id).orElse(null);
         if (existing == null) {
             return ResponseEntity.notFound().build();
         }
@@ -87,7 +87,7 @@ public class UserController {
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update an existing user")
     public ResponseEntity<String> patchUser(@PathVariable UUID id, @Valid @RequestBody PatchUserInput req) {
-        User existing = users.get(id);
+        User existing = repository.findById(id).orElse(null);
         if (existing == null) {
             return ResponseEntity.notFound().build();
         }
@@ -108,13 +108,34 @@ public class UserController {
     @GetMapping("/{id}")
     @Operation(summary = "Get a user by its ID")
     public ResponseEntity<String> getUser(@PathVariable UUID id) {
-        User user = users.get(id);
+        User user = repository.findById(id).orElse(null);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(gson.toJson(toDto(user)));
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "Get current user from JWT token")
+    public ResponseEntity<String> getMe(@org.springframework.web.bind.annotation.RequestHeader("Authorization") String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String token = authHeader.substring(7);
+        try {
+            var data = jwtService.verify(token);
+            User user = repository.findById(data.getId()).orElse(null);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(gson.toJson(toDto(user)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -124,24 +145,20 @@ public class UserController {
             @RequestParam(required = false) String email,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "1") int page) {
-        List<User> source = new ArrayList<>(users.values());
-        List<UserDTO> list = source.stream()
-                .filter(u -> email == null || u.getEmail().contains(email))
-                .filter(u -> q == null || u.getName().contains(q) || u.getEmail().contains(q))
-                .skip((long) (page - 1) * pageSize)
-                .limit(pageSize)
-                .map(this::toDto)
-                .collect(Collectors.toList());
+        int offset = (page - 1) * pageSize;
+        Iterable<User> found = repository.search(q, email, pageSize, offset);
+        List<UserDTO> list = new ArrayList<>();
+        found.forEach(u -> list.add(toDto(u)));
         return gson.toJson(list);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a user by its ID")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
-        User removed = users.remove(id);
-        if (removed == null) {
+        if (repository.findById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        repository.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
