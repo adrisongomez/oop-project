@@ -10,6 +10,7 @@ gson = "2.10.1"
 jbcrypt = "0.4"
 
 
+
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernate" }
@@ -17,4 +18,3 @@ postgresql = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 dotenv-java = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenv" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
-
