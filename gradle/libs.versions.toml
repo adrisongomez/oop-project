@@ -9,6 +9,7 @@ flyway = "10.13.0"
 h2 = "2.2.224"
 gson = "2.10.1"
 jbcrypt = "0.4"
+jwt = "4.4.0"
 dotenv = "2.3.2"
 
 
@@ -22,3 +23,4 @@ flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
+javajwt = { module = "com.auth0:java-jwt", version.ref = "jwt" }
