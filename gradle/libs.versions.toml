@@ -5,10 +5,12 @@
 guava = "33.4.5-jre"
 hibernate = "6.5.2.Final"
 postgres = "42.7.2"
-dotenv = "3.2.0"
+flyway = "10.13.0"
+h2 = "2.2.224"
 gson = "2.10.1"
 jbcrypt = "0.4"
 jwt = "4.4.0"
+dotenv = "2.3.2"
 
 
 
@@ -17,6 +19,8 @@ guava = { module = "com.google.guava:guava", version.ref = "guava" }
 hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernate" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 dotenv-java = { module = "io.github.cdimascio:dotenv-java", version.ref = "dotenv" }
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
 javajwt = { module = "com.auth0:java-jwt", version.ref = "jwt" }
