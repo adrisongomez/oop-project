@@ -4,14 +4,40 @@ import java.util.UUID;
 
 import com.oopecommerce.utils.sorts.ISortable;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+
+@Entity
+@Table(name = "product_media")
 public class ProductMedia implements ISortable {
 
-    final UUID id;
-    final String alt;
-    final String url;
-    final String type;
+    @Id
+    @Column(name = "id", columnDefinition = "uuid")
+    private UUID id;
 
-    int position;
+    @Column(name = "alt")
+    private String alt;
+
+    @Column(name = "url")
+    private String url;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "position")
+    private int position;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    protected ProductMedia() {
+        // Required by Hibernate
+    }
 
     public ProductMedia(UUID id, String alt, String url, String type, int position) {
         this.id = id;
@@ -33,12 +59,24 @@ public class ProductMedia implements ISortable {
         return alt;
     }
 
+    public void setAlt(String alt) {
+        this.alt = alt;
+    }
+
     public String getUrl() {
         return url;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public String getType() {
         return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getPosition() {
@@ -47,6 +85,14 @@ public class ProductMedia implements ISortable {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
 }

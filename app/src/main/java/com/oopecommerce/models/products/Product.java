@@ -7,6 +7,20 @@ import java.util.UUID;
 import com.oopecommerce.utils.sorts.SortDirection;
 import com.oopecommerce.utils.sorts.SortableUtils;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "products")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Product {
 
     static public enum ProductStatus {
@@ -15,12 +29,29 @@ public abstract class Product {
         ARCHIVED,
     }
 
-    final UUID id;
+    @Id
+    @Column(name = "id", columnDefinition = "uuid")
+    private UUID id;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "description", columnDefinition = "text")
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private ProductStatus status;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductMedia> medias;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> variants;
+
+    protected Product() {
+        // Required by Hibernate
+    }
 
     public Product(UUID id, String name, String description, ProductStatus status,
             List<ProductMedia> medias, List<ProductVariant> variants) {
@@ -30,6 +61,12 @@ public abstract class Product {
         this.status = status;
         this.setMedias(medias);
         this.setVariants(variants);
+        if (this.medias != null) {
+            this.medias.forEach(m -> m.setProduct(this));
+        }
+        if (this.variants != null) {
+            this.variants.forEach(v -> v.setProduct(this));
+        }
     }
 
     public Boolean equals(Product product) {
@@ -71,6 +108,9 @@ public abstract class Product {
     public void setMedias(List<ProductMedia> medias) {
         try {
             this.medias = SortableUtils.sortByPosition(medias, SortDirection.ASC);
+            if (this.medias != null) {
+                this.medias.forEach(m -> m.setProduct(this));
+            }
         } catch (Exception e) {
             this.medias = null;
         }
@@ -83,6 +123,9 @@ public abstract class Product {
     public void setVariants(List<ProductVariant> variants) {
         try {
             this.variants = SortableUtils.sortByPosition(variants, SortDirection.ASC);
+            if (this.variants != null) {
+                this.variants.forEach(v -> v.setProduct(this));
+            }
         } catch (Exception error) {
             this.variants = new ArrayList<>();
         }
