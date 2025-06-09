@@ -24,9 +24,11 @@ dependencies {
     implementation(libs.postgresql)
     implementation(libs.dotenv.java)
     implementation(libs.jbcrypt)
+    implementation(libs.flyway.core)
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation(libs.h2)
 }
 
 tasks.test {

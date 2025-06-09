@@ -2,6 +2,8 @@ package com.oopecommerce.utils;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.flywaydb.core.Flyway;
+import com.oopecommerce.models.users.User;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class HibernateUtil {
@@ -17,6 +19,16 @@ public class HibernateUtil {
             overrideProperty(cfg, "hibernate.connection.password", "HIBERNATE_CONN_PASSWORD");
             overrideProperty(cfg, "hibernate.dialect", "HIBERNATE_DIALECT");
             overrideProperty(cfg, "hibernate.hbm2ddl.auto", "HIBERNATE_HBM2DDL_AUTO");
+
+            Flyway.configure()
+                .dataSource(
+                    cfg.getProperty("hibernate.connection.url"),
+                    cfg.getProperty("hibernate.connection.username"),
+                    cfg.getProperty("hibernate.connection.password"))
+                .load()
+                .migrate();
+
+            cfg.addAnnotatedClass(User.class);
             return cfg.buildSessionFactory();
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);
