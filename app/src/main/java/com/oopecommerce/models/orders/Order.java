@@ -3,6 +3,9 @@ package com.oopecommerce.models.orders;
 import java.util.Date;
 import java.util.UUID;
 import com.oopecommerce.models.addresses.ShippingAddress;
+import com.oopecommerce.notifications.EventManager;
+import com.oopecommerce.notifications.EventType;
+import com.oopecommerce.notifications.OrderStatusChangeEvent;
 
 public class Order {
     public enum OrderStatus {
@@ -48,7 +51,13 @@ public class Order {
     }
 
     public void setStatus(OrderStatus status) {
-        this.status = status;
+        if (this.status != status) {
+            OrderStatus previous = this.status;
+            this.status = status;
+            EventManager.getInstance().notify(
+                EventType.ORDER_STATUS_CHANGED,
+                new OrderStatusChangeEvent(this, previous, status));
+        }
     }
 
     public ShippingAddress getShippingAddress() {
