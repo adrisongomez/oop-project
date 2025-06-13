@@ -1,20 +1,54 @@
 package com.oopecommerce.models.addresses;
 
 import java.util.Objects;
+import java.util.UUID;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "shipping_addresses")
 public class ShippingAddress {
+    @Id
+    @Column(name = "id", columnDefinition = "uuid")
+    private UUID id;
+
+    @Column(name = "street_address")
     private String streetAddress;
+
+    @Column(name = "city")
     private String city;
+
+    @Column(name = "state")
     private String state;
+
+    @Column(name = "zip_code")
     private String zipCode;
+
+    @Column(name = "country")
     private String country;
 
-    public ShippingAddress(String streetAddress, String city, String state, String zipCode, String country) {
+    protected ShippingAddress() {
+        // Required by Hibernate
+    }
+
+    public ShippingAddress(UUID id, String streetAddress, String city, String state, String zipCode, String country) {
+        this.id = id;
         this.streetAddress = streetAddress;
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
         this.country = country;
+    }
+
+    public ShippingAddress(String streetAddress, String city, String state, String zipCode, String country) {
+        this(UUID.randomUUID(), streetAddress, city, state, zipCode, country);
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     // Getters and Setters

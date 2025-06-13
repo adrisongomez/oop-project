@@ -10,12 +10,39 @@ import com.oopecommerce.models.users.User;
 import com.oopecommerce.models.products.Product;
 import com.oopecommerce.models.products.ProductVariant;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "carts")
 public class Cart {
-    final UUID id;
-    List<CartLineItem> lineItems;
-    final User user;
-    final Date createdAt;
-    Date updatedAt;
+    @Id
+    @Column(name = "id", columnDefinition = "uuid")
+    private UUID id;
+
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartLineItem> lineItems;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+    protected Cart() {
+        // Required by Hibernate
+    }
 
     public Cart(User user) {
         this.id = UUID.randomUUID();
@@ -116,3 +143,4 @@ public class Cart {
         this.updatedAt = updatedAt;
     }
 }
+

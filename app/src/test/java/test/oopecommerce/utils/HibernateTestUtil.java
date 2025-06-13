@@ -26,6 +26,11 @@ public class HibernateTestUtil {
         cfg.addAnnotatedClass(com.oopecommerce.models.products.ProductMedia.class);
         cfg.addAnnotatedClass(com.oopecommerce.models.products.ProductVariant.class);
         cfg.addAnnotatedClass(com.oopecommerce.models.products.SimpleProduct.class);
+        cfg.addAnnotatedClass(com.oopecommerce.models.addresses.ShippingAddress.class);
+        cfg.addAnnotatedClass(com.oopecommerce.models.carts.Cart.class);
+        cfg.addAnnotatedClass(com.oopecommerce.models.carts.CartLineItem.class);
+        cfg.addAnnotatedClass(com.oopecommerce.models.inventory.InventoryLocation.class);
+        cfg.addAnnotatedClass(com.oopecommerce.models.payments.Payment.class);
         return cfg.buildSessionFactory();
     }
 }
