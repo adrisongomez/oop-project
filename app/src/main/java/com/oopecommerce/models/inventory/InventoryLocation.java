@@ -1,16 +1,49 @@
 package com.oopecommerce.models.inventory;
 
+import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "inventory_locations")
 public class InventoryLocation {
+    @Id
+    @Column(name = "id", columnDefinition = "uuid")
+    private UUID id;
+
+    @Column(name = "warehouse_code")
     private String warehouseCode;
+
+    @Column(name = "street_address")
     private String streetAddress;
+
+    @Column(name = "city")
     private String city;
+
+    @Column(name = "country")
     private String country;
 
-    public InventoryLocation(String warehouseCode, String streetAddress, String city, String country) {
+    protected InventoryLocation() {
+        // Required by Hibernate
+    }
+
+    public InventoryLocation(UUID id, String warehouseCode, String streetAddress, String city, String country) {
+        this.id = id;
         this.warehouseCode = warehouseCode;
         this.streetAddress = streetAddress;
         this.city = city;
         this.country = country;
+    }
+
+    public InventoryLocation(String warehouseCode, String streetAddress, String city, String country) {
+        this(UUID.randomUUID(), warehouseCode, streetAddress, city, country);
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getWarehouseCode() {
