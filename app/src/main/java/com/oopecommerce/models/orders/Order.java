@@ -3,6 +3,7 @@ package com.oopecommerce.models.orders;
 import java.util.Date;
 import java.util.UUID;
 import com.oopecommerce.models.addresses.ShippingAddress;
+import com.oopecommerce.models.orders.OrderStatusNotifier;
 
 public class Order {
     public enum OrderStatus {
@@ -48,7 +49,11 @@ public class Order {
     }
 
     public void setStatus(OrderStatus status) {
-        this.status = status;
+        if (this.status != status) {
+            OrderStatus oldStatus = this.status;
+            this.status = status;
+            OrderStatusNotifier.getInstance().notifyStatusChange(this, oldStatus, status);
+        }
     }
 
     public ShippingAddress getShippingAddress() {
