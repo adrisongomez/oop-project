@@ -30,7 +30,7 @@ import com.oopecommerce.models.users.User;
 import com.google.gson.Gson;
 import com.oopecommerce.utils.hasher.Hasher;
 import com.oopecommerce.utils.hasher.BcryptHasher;
-import com.oopecommerce.repositories.UserRepository;
+import com.oopecommerce.repositories.IUserRepository;
 import com.oopecommerce.security.JwtTokenService;
 import com.oopecommerce.security.SessionStore;
 
@@ -41,14 +41,12 @@ public class UserController {
 
     private final Gson gson = new Gson();
     private final Hasher hasher = new BcryptHasher();
-    private final UserRepository repository;
+    private final IUserRepository repository;
     private final JwtTokenService jwtService;
-    private final SessionStore sessionStore;
 
-    public UserController(UserRepository repository, JwtTokenService jwtService, SessionStore sessionStore) {
+    public UserController(IUserRepository repository, JwtTokenService jwtService, SessionStore sessionStore) {
         this.repository = repository;
         this.jwtService = jwtService;
-        this.sessionStore = sessionStore;
     }
 
 

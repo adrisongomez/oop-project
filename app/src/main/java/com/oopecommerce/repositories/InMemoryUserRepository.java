@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.oopecommerce.models.users.User;
 
 @Component
-public class InMemoryUserRepository implements UserRepository {
+public class InMemoryUserRepository implements IUserRepository {
     private final Map<UUID, User> users = new ConcurrentHashMap<>();
     private final Map<String, User> emailIndex = new ConcurrentHashMap<>();
     private final Map<String, List<User>> nameIndex = new ConcurrentHashMap<>();

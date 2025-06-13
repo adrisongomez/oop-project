@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.oopecommerce.models.users.User;
 
-public interface UserRepository {
+public interface IUserRepository {
     Optional<User> findById(UUID id);
     Optional<User> findByEmail(String email);
     void save(User user);

@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.oopecommerce.models.products.Product;
 
-public interface ProductRepository {
+public interface IProductRepository {
     Optional<Product> findById(UUID id);
     void save(Product product);
     void delete(UUID id);

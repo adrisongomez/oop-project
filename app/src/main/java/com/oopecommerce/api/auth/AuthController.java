@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oopecommerce.models.users.User;
-import com.oopecommerce.repositories.UserRepository;
+import com.oopecommerce.repositories.IUserRepository;
 import com.oopecommerce.security.JwtTokenService;
 import com.oopecommerce.security.SessionStore;
 import com.oopecommerce.utils.hasher.BcryptHasher;
@@ -20,12 +20,12 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private final UserRepository repository;
+    private final IUserRepository repository;
     private final JwtTokenService jwtService;
     private final SessionStore sessionStore;
     private final Hasher hasher = new BcryptHasher();
 
-    public AuthController(UserRepository repository, JwtTokenService jwtService, SessionStore sessionStore) {
+    public AuthController(IUserRepository repository, JwtTokenService jwtService, SessionStore sessionStore) {
         this.repository = repository;
         this.jwtService = jwtService;
         this.sessionStore = sessionStore;

@@ -7,11 +7,13 @@ import java.util.UUID;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Component;
 
 import com.oopecommerce.models.products.Product;
 import com.oopecommerce.utils.HibernateUtil;
 
-public class HibernateProductRepository implements ProductRepository {
+@Component
+public class HibernateProductRepository implements IProductRepository {
     private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
     @Override

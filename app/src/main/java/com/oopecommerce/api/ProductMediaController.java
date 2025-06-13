@@ -22,7 +22,7 @@ import com.oopecommerce.dto.products.UpdateProductMediaInput;
 import com.oopecommerce.dto.products.PatchProductMediaInput;
 import com.oopecommerce.models.products.Product;
 import com.oopecommerce.models.products.ProductMedia;
-import com.oopecommerce.repositories.ProductRepository;
+import com.oopecommerce.repositories.IProductRepository;
 
 import jakarta.validation.Valid;
 
@@ -30,9 +30,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/products/{productId}/media")
 public class ProductMediaController {
     private final Gson gson = new Gson();
-    private final ProductRepository repository;
+    private final IProductRepository repository;
 
-    public ProductMediaController(ProductRepository repository) {
+    public ProductMediaController(IProductRepository repository) {
         this.repository = repository;
     }
 

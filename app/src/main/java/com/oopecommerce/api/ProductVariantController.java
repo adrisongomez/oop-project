@@ -23,7 +23,7 @@ import com.oopecommerce.dto.products.PatchProductVariantInput;
 import com.oopecommerce.models.products.Product;
 import com.oopecommerce.models.products.ProductMedia;
 import com.oopecommerce.models.products.ProductVariant;
-import com.oopecommerce.repositories.ProductRepository;
+import com.oopecommerce.repositories.IProductRepository;
 
 import jakarta.validation.Valid;
 
@@ -31,9 +31,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/products/{productId}/variants")
 public class ProductVariantController {
     private final Gson gson = new Gson();
-    private final ProductRepository repository;
+    private final IProductRepository repository;
 
-    public ProductVariantController(ProductRepository repository) {
+    public ProductVariantController(IProductRepository repository) {
         this.repository = repository;
     }
 

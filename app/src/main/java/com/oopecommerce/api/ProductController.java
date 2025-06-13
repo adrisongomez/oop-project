@@ -25,8 +25,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.google.gson.Gson;
 import com.oopecommerce.dto.products.CreateProductInput;
-import com.oopecommerce.dto.products.CreateProductMediaInput;
-import com.oopecommerce.dto.products.CreateProductVariantInput;
 import com.oopecommerce.dto.products.UpdateProductInput;
 import com.oopecommerce.dto.products.PatchProductInput;
 import com.oopecommerce.dto.products.ProductDTO;
@@ -35,7 +33,7 @@ import com.oopecommerce.models.products.Product.ProductStatus;
 import com.oopecommerce.models.products.SimpleProduct;
 import com.oopecommerce.models.products.ProductMedia;
 import com.oopecommerce.models.products.ProductVariant;
-import com.oopecommerce.repositories.ProductRepository;
+import com.oopecommerce.repositories.IProductRepository;
 
 @RestController
 @RequestMapping("/products")
@@ -43,9 +41,9 @@ import com.oopecommerce.repositories.ProductRepository;
 public class ProductController {
 
     private final Gson gson = new Gson();
-    private final ProductRepository repository;
+    private final IProductRepository repository;
 
-    public ProductController(ProductRepository repository) {
+    public ProductController(IProductRepository repository) {
         this.repository = repository;
     }
 

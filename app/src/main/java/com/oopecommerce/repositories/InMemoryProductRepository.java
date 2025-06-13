@@ -7,12 +7,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.stereotype.Component;
+// import org.springframework.stereotype.Component;
 
 import com.oopecommerce.models.products.Product;
 
-@Component
-public class InMemoryProductRepository implements ProductRepository {
+public class InMemoryProductRepository implements IProductRepository {
     private final Map<UUID, Product> products = new ConcurrentHashMap<>();
 
     @Override

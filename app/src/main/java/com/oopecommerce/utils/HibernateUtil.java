@@ -5,8 +5,11 @@ import org.hibernate.cfg.Configuration;
 import org.flywaydb.core.Flyway;
 import com.oopecommerce.models.users.User;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HibernateUtil {
+    private static final Logger logger = LoggerFactory.getLogger(HibernateUtil.class);
     private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
     private static final SessionFactory sessionFactory = buildSessionFactory();
 
@@ -20,13 +23,24 @@ public class HibernateUtil {
             overrideProperty(cfg, "hibernate.dialect", "HIBERNATE_DIALECT");
             overrideProperty(cfg, "hibernate.hbm2ddl.auto", "HIBERNATE_HBM2DDL_AUTO");
 
-            Flyway.configure()
+            Flyway flyway = Flyway.configure()
                 .dataSource(
                     cfg.getProperty("hibernate.connection.url"),
                     cfg.getProperty("hibernate.connection.username"),
                     cfg.getProperty("hibernate.connection.password"))
-                .load()
-                .migrate();
+                .baselineOnMigrate(true)
+                .createSchemas(true)
+                .locations("classpath:db/migration")
+                .load();
+            
+            try {
+                logger.info("Attempting database migration with URL: {}", cfg.getProperty("hibernate.connection.url"));
+                flyway.migrate();
+                logger.info("Migration completed successfully");
+            } catch (Exception e) {
+                logger.error("Migration failed: {}", e.getMessage(), e);
+                throw e;
+            }
 
             cfg.addAnnotatedClass(User.class);
             cfg.addAnnotatedClass(com.oopecommerce.models.products.Product.class);
