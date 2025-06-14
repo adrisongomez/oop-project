@@ -37,6 +37,7 @@ public class HibernateUtil {
             cfg.addAnnotatedClass(com.oopecommerce.models.carts.Cart.class);
             cfg.addAnnotatedClass(com.oopecommerce.models.carts.CartLineItem.class);
             cfg.addAnnotatedClass(com.oopecommerce.models.inventory.InventoryLocation.class);
+            cfg.addAnnotatedClass(com.oopecommerce.models.inventory.InventoryLevel.class);
             cfg.addAnnotatedClass(com.oopecommerce.models.payments.Payment.class);
             return cfg.buildSessionFactory();
         } catch (Throwable ex) {
