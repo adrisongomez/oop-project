@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
 import com.oopecommerce.dto.inventory.InventoryLevelDTO;
 import com.oopecommerce.dto.inventory.UpdateInventoryLevelInput;
 import com.oopecommerce.models.inventory.InventoryLevel;
@@ -30,7 +30,6 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/products/{productId}/locations")
 public class InventoryLevelController {
-    private final Gson gson = new Gson();
     private final InventoryLevelRepository repository;
     private final IProductRepository productRepository;
     private final InventoryLocationRepository locationRepository;
@@ -47,24 +46,25 @@ public class InventoryLevelController {
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String listLevels(@PathVariable UUID productId) {
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<InventoryLevelDTO>> listLevels(@PathVariable UUID productId) {
         Iterable<InventoryLevel> list = repository.findAllByProduct(productId);
         List<InventoryLevelDTO> out = new ArrayList<>();
         list.forEach(l -> out.add(toDto(l)));
-        return gson.toJson(out);
+        return ResponseEntity.ok().body(out);
     }
 
     @GetMapping(value = "/{locationId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getLevel(@PathVariable UUID productId, @PathVariable UUID locationId) {
+    public ResponseEntity<InventoryLevelDTO> getLevel(@PathVariable UUID productId, @PathVariable UUID locationId) {
         var level = repository.findByProductAndLocation(productId, locationId).orElse(null);
         if (level == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(gson.toJson(toDto(level)));
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(toDto(level));
     }
 
     @PutMapping(value = "/{locationId}")
-    public ResponseEntity<String> setLevel(@PathVariable UUID productId, @PathVariable UUID locationId,
+    public ResponseEntity<InventoryLevelDTO> setLevel(@PathVariable UUID productId, @PathVariable UUID locationId,
             @Valid @RequestBody UpdateInventoryLevelInput req) {
         Product product = productRepository.findById(productId).orElse(null);
         if (product == null) {
@@ -81,7 +81,7 @@ public class InventoryLevelController {
             level.setQuantity(req.getQuantity());
         }
         repository.save(level);
-        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(gson.toJson(toDto(level)));
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(toDto(level));
     }
 
     @DeleteMapping(value = "/{locationId}")

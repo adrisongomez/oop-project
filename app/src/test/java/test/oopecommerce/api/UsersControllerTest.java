@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -14,10 +15,16 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oopecommerce.repositories.IUserRepository;
+import test.oopecommerce.__fixtures__.InMemoryUserRepository;
 
 @SpringBootTest(classes = com.oopecommerce.OopEcommerceApplication.class)
 @AutoConfigureMockMvc
+@Import(TestConfig.class)
 public class UsersControllerTest {
+    
+    @Autowired
+    private IUserRepository userRepository;
     @Autowired
     private MockMvc mockMvc;
 
@@ -106,5 +113,15 @@ public class UsersControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(patchJson))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void testUsingInMemoryRepository() {
+        // Verificar que el repositorio inyectado es una instancia de InMemoryUserRepository
+        assertTrue(userRepository instanceof InMemoryUserRepository);
+        
+        // Verificar que los usuarios de prueba precargados están disponibles
+        assertTrue(userRepository.findByEmail("john@example.com").isPresent());
+        assertTrue(userRepository.findByEmail("jane@example.com").isPresent());
     }
 }

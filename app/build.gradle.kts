@@ -23,7 +23,6 @@ dependencies {
     implementation(libs.hibernate.core)
     implementation(libs.postgresql)
     implementation(libs.dotenv.java)
-    implementation(libs.gson)
     implementation(libs.jbcrypt)
     implementation(libs.javajwt)
     implementation(libs.flyway.core)
