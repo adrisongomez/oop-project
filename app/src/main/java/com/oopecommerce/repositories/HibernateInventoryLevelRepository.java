@@ -7,10 +7,12 @@ import java.util.UUID;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.stereotype.Component;
 
 import com.oopecommerce.models.inventory.InventoryLevel;
 import com.oopecommerce.utils.HibernateUtil;
 
+@Component
 public class HibernateInventoryLevelRepository implements InventoryLevelRepository {
     private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 

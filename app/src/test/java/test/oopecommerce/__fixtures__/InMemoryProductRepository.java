@@ -1,4 +1,4 @@
-package com.oopecommerce.repositories;
+package test.oopecommerce.__fixtures__;
 
 import java.util.Map;
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 // import org.springframework.stereotype.Component;
 
 import com.oopecommerce.models.products.Product;
+import com.oopecommerce.repositories.IProductRepository;
 
 public class InMemoryProductRepository implements IProductRepository {
     private final Map<UUID, Product> products = new ConcurrentHashMap<>();

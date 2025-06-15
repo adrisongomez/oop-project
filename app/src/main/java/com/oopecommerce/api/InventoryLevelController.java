@@ -22,7 +22,7 @@ import com.oopecommerce.models.inventory.InventoryLevel;
 import com.oopecommerce.models.inventory.InventoryLocation;
 import com.oopecommerce.models.products.Product;
 import com.oopecommerce.repositories.InventoryLevelRepository;
-import com.oopecommerce.repositories.ProductRepository;
+import com.oopecommerce.repositories.IProductRepository;
 import com.oopecommerce.repositories.InventoryLocationRepository;
 
 import jakarta.validation.Valid;
@@ -32,10 +32,10 @@ import jakarta.validation.Valid;
 public class InventoryLevelController {
     private final Gson gson = new Gson();
     private final InventoryLevelRepository repository;
-    private final ProductRepository productRepository;
+    private final IProductRepository productRepository;
     private final InventoryLocationRepository locationRepository;
 
-    public InventoryLevelController(InventoryLevelRepository repository, ProductRepository productRepository,
+    public InventoryLevelController(InventoryLevelRepository repository, IProductRepository productRepository,
             InventoryLocationRepository locationRepository) {
         this.repository = repository;
         this.productRepository = productRepository;

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
@@ -27,7 +28,6 @@ import com.oopecommerce.dto.users.CreateUserInput;
 import com.oopecommerce.dto.users.UpdateUserInput;
 import com.oopecommerce.dto.users.PatchUserInput;
 import com.oopecommerce.models.users.User;
-import com.google.gson.Gson;
 import com.oopecommerce.utils.hasher.Hasher;
 import com.oopecommerce.utils.hasher.BcryptHasher;
 import com.oopecommerce.repositories.IUserRepository;
@@ -39,7 +39,6 @@ import com.oopecommerce.security.SessionStore;
 @Tag(name = "Users", description = "Operations related to application users")
 public class UserController {
 
-    private final Gson gson = new Gson();
     private final Hasher hasher = new BcryptHasher();
     private final IUserRepository repository;
     private final JwtTokenService jwtService;
@@ -49,27 +48,27 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-
-
     private UserDTO toDto(User user) {
         return new UserDTO(user.getId(), user.getEmail(), user.getName());
     }
 
     @PostMapping("/")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a new user")
-    public ResponseEntity<String> createUser(@Valid @RequestBody CreateUserInput req) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody CreateUserInput req) {
         UUID id = UUID.randomUUID();
         String hashed = hasher.hash(req.getPassword());
         User user = new User(id, req.getEmail(), hashed, req.getName());
         repository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(toDto(user)));
+                .body(toDto(user));
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update an existing user")
-    public ResponseEntity<String> updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserInput req) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable UUID id, @Valid @RequestBody UpdateUserInput req) {
         User existing = repository.findById(id).orElse(null);
         if (existing == null) {
             return ResponseEntity.notFound().build();
@@ -79,12 +78,13 @@ public class UserController {
         existing.setName(req.getName());
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(toDto(existing)));
+                .body(toDto(existing));
     }
 
     @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Partially update an existing user")
-    public ResponseEntity<String> patchUser(@PathVariable UUID id, @Valid @RequestBody PatchUserInput req) {
+    public ResponseEntity<UserDTO> patchUser(@PathVariable UUID id, @Valid @RequestBody PatchUserInput req) {
         User existing = repository.findById(id).orElse(null);
         if (existing == null) {
             return ResponseEntity.notFound().build();
@@ -100,24 +100,27 @@ public class UserController {
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(toDto(existing)));
+                .body(toDto(existing));
     }
 
     @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get a user by its ID")
-    public ResponseEntity<String> getUser(@PathVariable UUID id) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable UUID id) {
         User user = repository.findById(id).orElse(null);
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(gson.toJson(toDto(user)));
+                .body(toDto(user));
     }
 
     @GetMapping("/me")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get current user from JWT token")
-    public ResponseEntity<String> getMe(@org.springframework.web.bind.annotation.RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<UserDTO> getMe(
+            @org.springframework.web.bind.annotation.RequestHeader("Authorization") String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -130,27 +133,28 @@ public class UserController {
             }
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body(gson.toJson(toDto(user)));
+                    .body(toDto(user));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "List users with optional query and pagination")
-    public String listUsers(
+    public ResponseEntity<List<UserDTO>> listUsers(
             @RequestParam(required = false) String q,
-            @RequestParam(required = false) String email,
             @RequestParam(defaultValue = "10") int pageSize,
             @RequestParam(defaultValue = "1") int page) {
         int offset = (page - 1) * pageSize;
-        Iterable<User> found = repository.search(q, email, pageSize, offset);
+        Iterable<User> found = repository.search(q, pageSize, offset);
         List<UserDTO> list = new ArrayList<>();
         found.forEach(u -> list.add(toDto(u)));
-        return gson.toJson(list);
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(list);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Delete a user by its ID")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         if (repository.findById(id).isEmpty()) {

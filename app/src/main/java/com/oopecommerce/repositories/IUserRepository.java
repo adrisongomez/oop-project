@@ -11,5 +11,5 @@ public interface IUserRepository {
     void save(User user);
     void delete(UUID id);
     Iterable<User> findAll();
-    Iterable<User> search(String query, String email, int limit, int offset);
+    Iterable<User> search(String query, int limit, int offset);
 }

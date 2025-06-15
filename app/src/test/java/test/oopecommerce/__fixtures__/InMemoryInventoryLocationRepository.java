@@ -1,7 +1,6 @@
-package com.oopecommerce.repositories;
+package test.oopecommerce.__fixtures__;
 
 import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 import com.oopecommerce.models.inventory.InventoryLocation;
+import com.oopecommerce.repositories.InventoryLocationRepository;
 
 @Component
 public class InMemoryInventoryLocationRepository implements InventoryLocationRepository {

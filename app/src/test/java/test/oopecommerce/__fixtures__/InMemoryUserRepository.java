@@ -1,4 +1,4 @@
-package com.oopecommerce.repositories;
+package test.oopecommerce.__fixtures__;
 
 import java.util.Map;
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 import com.oopecommerce.models.users.User;
+import com.oopecommerce.repositories.IUserRepository;
 
 @Component
 public class InMemoryUserRepository implements IUserRepository {
@@ -19,8 +20,10 @@ public class InMemoryUserRepository implements IUserRepository {
 
     public InMemoryUserRepository() {
         // Mock data
-        User u1 = new User(UUID.fromString("00000000-0000-0000-0000-000000000001"), "john@example.com", "hash1", "John");
-        User u2 = new User(UUID.fromString("00000000-0000-0000-0000-000000000002"), "jane@example.com", "hash2", "Jane");
+        User u1 = new User(UUID.fromString("00000000-0000-0000-0000-000000000001"), "john@example.com", "hash1",
+                "John");
+        User u2 = new User(UUID.fromString("00000000-0000-0000-0000-000000000002"), "jane@example.com", "hash2",
+                "Jane");
         save(u1);
         save(u2);
     }
@@ -63,17 +66,9 @@ public class InMemoryUserRepository implements IUserRepository {
     }
 
     @Override
-    public Iterable<User> search(String query, String email, int limit, int offset) {
+    public Iterable<User> search(String query, int limit, int offset) {
         List<User> results = new ArrayList<>();
-        if (email != null) {
-            User u = emailIndex.get(email.toLowerCase());
-            if (u != null) {
-                if (query == null || u.getName().toLowerCase().contains(query.toLowerCase()) ||
-                        u.getEmail().toLowerCase().contains(query.toLowerCase())) {
-                    results.add(u);
-                }
-            }
-        } else if (query != null) {
+        if (query != null) {
             String q = query.toLowerCase();
             nameIndex.forEach((name, list) -> {
                 if (name.contains(q)) {

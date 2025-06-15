@@ -1,4 +1,4 @@
-package com.oopecommerce.repositories;
+package test.oopecommerce.__fixtures__;
 
 import java.util.Map;
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 import com.oopecommerce.models.inventory.InventoryLevel;
+import com.oopecommerce.repositories.InventoryLevelRepository;
 
 @Component
 public class InMemoryInventoryLevelRepository implements InventoryLevelRepository {
