@@ -1,5 +1,7 @@
 package com.oopecommerce.models.payments;
 
+import com.oopecommerce.exceptions.PaymentFailedException;
+
 public class CreditCardPayment implements PaymentProcessor {
     private PaymentStatus status;
 
@@ -25,7 +27,7 @@ public class CreditCardPayment implements PaymentProcessor {
         if (this.status == PaymentStatus.SUCCESS) {
             System.out.println("Credit card payment confirmed.");
         } else {
-            System.out.println("Credit card payment could not be confirmed.");
+            throw new PaymentFailedException("Credit card payment could not be confirmed.");
         }
     }
-} 
+}
