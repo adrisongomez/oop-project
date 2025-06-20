@@ -1,6 +1,7 @@
 package com.oopecommerce.models.inventory;
 
 import com.oopecommerce.models.products.Product;
+import com.oopecommerce.exceptions.InventoryInsufficientException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class PhysicalInventoryManager extends InventoryManager {
     @Override
     public boolean updateStock(Product product, int quantity) {
         if (!stock.containsKey(product) || getStock(product) < quantity) {
-            return false; // Not enough stock
+            throw new InventoryInsufficientException("Not enough stock for product " + product.getName());
         }
         stock.put(product, getStock(product) - quantity);
         return true;
