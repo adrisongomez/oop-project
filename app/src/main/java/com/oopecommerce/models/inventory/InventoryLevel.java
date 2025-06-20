@@ -70,6 +70,12 @@ public class InventoryLevel {
     }
 
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        if (this.quantity != quantity) {
+            int old = this.quantity;
+            this.quantity = quantity;
+            com.oopecommerce.notifications.EventManager.getInstance().notify(
+                com.oopecommerce.notifications.EventType.INVENTORY_LEVEL_CHANGED,
+                new com.oopecommerce.notifications.InventoryLevelChangeEvent(this, old, quantity));
+        }
     }
 }

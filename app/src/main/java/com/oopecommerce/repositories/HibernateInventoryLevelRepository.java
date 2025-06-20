@@ -8,11 +8,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
 
 import com.oopecommerce.models.inventory.InventoryLevel;
 import com.oopecommerce.utils.HibernateUtil;
 
 @Component
+@Profile("db")
 public class HibernateInventoryLevelRepository implements InventoryLevelRepository {
     private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
