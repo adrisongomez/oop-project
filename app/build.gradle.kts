@@ -28,6 +28,7 @@ dependencies {
     implementation(libs.flyway.core)
     implementation("org.flywaydb:flyway-database-postgresql:${libs.versions.flyway.get()}")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
