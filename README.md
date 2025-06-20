@@ -8,9 +8,24 @@ Esta app es una app de concepto y solo por fines de explorar diferentes tecnolog
 
 ## Stack
 
- - Java 21 (ver configurado en `app/build.gradle.kts`)
+- Java 21 (ver configurado en `app/build.gradle.kts`)
 - Gradle
 - Neovim como editor tambien se puede correr en Vscode
+
+### Librerías y herramientas utilizadas
+
+- **Spring Boot 3.2.5**: framework principal para crear la aplicación web con un servidor embebido y configuración simplificada.
+- **Hibernate ORM 6.5.2.Final**: capa de persistencia que nos permite mapear entidades y trabajar con la base de datos usando JPA.
+- **Flyway 10.13.0**: herramienta para versionar y aplicar migraciones SQL automáticamente.
+- **Driver PostgreSQL 42.7.2**: controlador JDBC usado para conectarse a la base de datos en producción.
+- **H2 2.2.224**: base de datos en memoria utilizada durante las pruebas.
+- **Guava 33.4.5-jre**: conjunto de utilidades de Google que simplifican colecciones y otras operaciones comunes.
+- **dotenv-java 2.3.2**: carga variables de entorno desde un archivo `.env` para la configuración local.
+- **jBCrypt 0.4**: permite hashear contraseñas usando el algoritmo BCrypt.
+- **java-jwt 4.4.0**: biblioteca para crear y verificar tokens JWT en la autenticación.
+- **springdoc-openapi 2.5.0**: genera documentación Swagger automáticamente a partir de los controladores.
+- **Gradle 8.14**: herramienta de construcción y gestión de dependencias del proyecto.
+- **Docker Compose**: orquesta contenedores para levantar Postgres y otros servicios en desarrollo.
 
 ## Docker Compose
 
