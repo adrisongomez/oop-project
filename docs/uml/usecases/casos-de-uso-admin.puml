@@ -1,0 +1,18 @@
+@startuml "Caso de uso - Administrador"
+left to right direction
+actor Administrador as admin
+
+rectangle "Panel de Administración" {
+    usecase "Gestionar productos" as manageProducts
+    usecase "Gestionar inventario" as manageInventory
+    usecase "Gestionar pedidos" as manageOrders
+    usecase "Gestionar usuarios" as manageUsers
+    usecase "Generar reportes" as generateReports
+}
+
+admin --> manageProducts
+admin --> manageInventory
+admin --> manageOrders
+admin --> manageUsers
+admin --> generateReports
+@enduml
