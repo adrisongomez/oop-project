@@ -1,0 +1,27 @@
+@startuml "Caso de uso - Cliente"
+left to right direction
+actor Cliente as customer
+actor SistemaDePago as payment
+
+rectangle "Tienda en línea" {
+    usecase "Registrarse" as register
+    usecase "Iniciar sesión" as login
+    usecase "Buscar productos" as search
+    usecase "Ver detalle de producto" as viewProduct
+    usecase "Añadir al carrito" as addToCart
+    usecase "Actualizar carrito" as updateCart
+    usecase "Realizar checkout" as checkout
+    usecase "Seguir estado de pedido" as trackOrder
+}
+
+customer --> register
+customer --> login
+customer --> search
+customer --> viewProduct
+customer --> addToCart
+customer --> updateCart
+customer --> checkout
+customer --> trackOrder
+checkout --> payment : include
+
+@enduml
