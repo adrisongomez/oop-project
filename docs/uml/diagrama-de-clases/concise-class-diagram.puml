@@ -1,0 +1,171 @@
+@startuml
+' Diagrama de clases simplificado del dominio principal
+skinparam classAttributeIconSize 0
+
+package "Productos" {
+    abstract class Product {
+        +UUID id
+        +String name
+        +String description
+        +ProductStatus status
+        +List<ProductMedia> medias
+        +List<ProductVariant> variants
+        +showDetail()
+        +calculateShippingCost()
+    }
+    class SimpleProduct
+    class DigitalProduct {
+        -String fileFormat
+        -double fileSize
+        -String storage
+        -String downloadUrl
+        +generateDownloadLink()
+    }
+    class PhysicalProduct {
+        -double weight
+        -String dimensions
+        -InventoryLocation inventoryLocation
+    }
+    Product <|-- SimpleProduct
+    Product <|-- DigitalProduct
+    Product <|-- PhysicalProduct
+
+    class ProductVariant {
+        +UUID id
+        +String sku
+        +List<String> options
+        +int position
+        +ProductMedia featureMedia
+        +double price
+        +String weightInGrams
+    }
+    class ProductMedia {
+        +UUID id
+        +String alt
+        +String url
+        +String type
+        +int position
+    }
+    Product "1" -- "*" ProductVariant
+    Product "1" -- "*" ProductMedia
+    ProductVariant "1" -- "1" ProductMedia : feature
+}
+
+package "Inventario" {
+    class InventoryLocation {
+        +UUID id
+        +String warehouseCode
+        +String streetAddress
+        +String city
+        +String country
+    }
+    class InventoryLevel {
+        +UUID id
+        +Product product
+        +InventoryLocation location
+        +int quantity
+    }
+    abstract class InventoryManager {
+        +addProduct(Product,int)
+        +removeProduct(Product)
+        +updateStock(Product,int)
+        +getStock(Product)
+    }
+    class PhysicalInventoryManager
+    class DigitalInventoryManager
+    InventoryManager <|-- PhysicalInventoryManager
+    InventoryManager <|-- DigitalInventoryManager
+    InventoryLevel "*" -- "1" InventoryLocation
+    InventoryLevel "*" -- "1" Product
+}
+
+package "Carrito" {
+    class Cart {
+        +UUID id
+        +List<CartLineItem> lineItems
+        +User user
+        +getTotal()
+        +addItem(ProductVariant,int)
+    }
+    class CartLineItem {
+        +UUID id
+        +ProductVariant variant
+        +int quantity
+        +double getTotal()
+    }
+    Cart "1" -- "*" CartLineItem
+    CartLineItem "*" -- "1" ProductVariant
+}
+
+package "Pedidos" {
+    class ShippingAddress {
+        +UUID id
+        +String streetAddress
+        +String city
+        +String state
+        +String zipCode
+        +String country
+    }
+    class Order {
+        +UUID id
+        +Date orderDate
+        +OrderStatus status
+        +ShippingAddress shippingAddress
+        +double taxes
+    }
+    ShippingAddress "1" -- "*" Order
+}
+
+package "Pagos" {
+    class Payment {
+        +UUID id
+        +User user
+        +double amount
+        +Status status
+        +String method
+        +Date createdAt
+    }
+    interface PaymentProcessor {
+        +initiatePayment(double)
+        +verifyPayment()
+        +confirmPayment()
+    }
+    class CreditCardPayment
+    class PayPalPayment
+    PaymentProcessor <|.. CreditCardPayment
+    PaymentProcessor <|.. PayPalPayment
+    User "1" -- "*" Payment
+}
+
+package "Usuarios" {
+    class User {
+        +UUID id
+        +String email
+        +String hashedPassword
+        +String name
+    }
+    class Customer {
+        -List<Order> purchaseHistory
+        -String preferences
+    }
+    class Admin
+    User <|-- Customer
+    User <|-- Admin
+    Customer "*" -- "*" Order : purchases
+}
+
+package "Notificaciones" {
+    interface NotificationObserver {
+        +update(NotificationEvent)
+    }
+    interface NotificationEvent
+    enum EventType
+    class EventManager {
+        +subscribe(EventType,NotificationObserver)
+        +unsubscribe(EventType,NotificationObserver)
+        +notify(EventType,NotificationEvent)
+    }
+    NotificationObserver <.. EventManager
+}
+
+@enduml
