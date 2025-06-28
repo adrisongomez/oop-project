@@ -68,6 +68,12 @@ ejecutan automáticamente al iniciar la aplicación.
 Las migraciones se aplican cuando `HibernateUtil` inicia, por ejemplo al
 ejecutar `./gradlew bootRun` o durante las pruebas con `./gradlew test`.
 
+#### Datos de ejemplo
+
+Se añadió la migración `V5__seed_initial_data.sql` que inserta registros de
+prueba en las tablas principales. Flyway la ejecutará automáticamente al
+levantar la aplicación para que cuentes con información básica al iniciar.
+
 ### Pruebas de integración con base de datos en memoria
 
 Para los tests de integración se utiliza la base de datos en memoria **H2**. Las
